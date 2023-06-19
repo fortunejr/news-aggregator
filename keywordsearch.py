@@ -1,3 +1,7 @@
+import os
+import nltk
+import nltk.corpus
+from nltk.tokenize import word_tokenize
 from googlesearch import search
 import webbrowser
 import time
@@ -11,94 +15,62 @@ import random
 interests = []
 
 #Categories
-business = ['dollar','stock market','bitcoin','btc','crypto']
-tech = ['apple','microsoft','python','programming','coding','code','samsung']
-health = ['COVID','disease','hospital']
-economy = ['naira','forex','scarcity','insurance','oil boom','dollar','russia', 'nigeria','america','canada']
-war = ['ukraine','russia']
-politics = ['election','biden','putin','tinubu']
-sport = ['football','soccer','nba','manchester united','ucl','laliga','epl']
+science = ['moon','sun','nasa','mars','']
+business = ['dollar','money','rich','stock market','bitcoin','btc','crypto','btc','market','chinese','america','us','ethereum','wallet','sp500','fortune500','dow jones','forex','dollar','dollars','cap','$','euro','euros','europe','european']
+tech = ['apple','microsoft','python','programming','coding','code','samsung','hp','macbook','tecno','infinix','bot','chat','netflix','technology','tech','java','javascript','js','hp','computers','py']
+health = ['COVID','disease','hospital','covid-19','allergy','ache','appetite','aspirin','blood','bone','bruise','clinic','cold','cough','diarrhea','fever','hiv','aids','first aid','lassa','flu','injection','infection','injury','muscle','pain','rash','heat','stomach','head','leg','virus','fungi','bacteria','fungus','viral','bacterium','sick']
+economy = ['naira','money','forex','scarcity','insurance','oil boom','dollar','russia', 'nigeria','america','canada','subsidy','budget','capital','bankrupt','bankruptcy','cash','consumer','credit','currency','debt','deficit','finance','dollars','dollar','naira','loan','investment']
+war = ['ukraine','russia','ally','allies']
+politics = ['election','biden','putin','tinubu','obi','peter','bat','senate','apc','pdp','lp','labour','party','atiku','igbo','yoruba']
+sport = ['football','soccer','nba','manchester','ucl','laliga','epl','barca','barcelona','madrid','atletico','messi','ronaldo','neymar','world cup','man city','treble','mbappe','psg','chelsea','liverpool','arsenal','epl','pl','tottenham','spurs','man utd','ac milan','inter','milan','napoli','juventus','bayern','dortmund','leipzig','bundesliga','serie a','mls','soccer','saudi','saka','rice','haaland','alvarez','benardo','gundogan','rodrigo','rashford','de gea','fernandes','salah','firmino','nunez','allison','gakpo','van dijk','diaz','jesus','martinelli','kane','son','lloris','lewandowski','pedri','gavi','benzema','vini jr','mane']
 entertainment = ['davido','wizkid','rema','burnaboy']
 
-workbook = Workbook()
-sheet = workbook.active
-
-wb = load_workbook('interests.xlsx')
-ws = wb.active
-sheet = wb.active
 
 def fetchnews():
-    sheet_len = len(sheet['A'])
+    
     urls = []
-    #print(ws['B2'].value)
+    
     query = input('Enter your interest: ')
     print(query)
     interests.append(query)
-    sheet_len = len(sheet['A'])
-    sheet['A' + str(sheet_len+1)] = query
-    wb.save('interests.xlsx')
-    for j in search(query):
-        urls.append(j)
-
-    #print(urls)
-    html_text = requests.get(urls[0]).text
-    soup = BeautifulSoup(html_text, 'lxml')
-    head = soup.find('title')
-    content = soup.find_all('p')
-    print(head.text)
-    query2 = query.split()
-    for queryword in query2:
-        for bus in business:
-            if queryword == bus:
-                print('Business')
-                sheet['C' + str(sheet_len+1)] = 'Business'
-        for techh in tech:
-            if queryword == techh:
-                print('Tech')
-                sheet['C' + str(sheet_len+1)] = 'Tech'
-        for healthh in health:
-            if queryword == healthh:
-                print('Health')
-                sheet['C' + str(sheet_len+1)] = 'Health'
-        for econ in economy:
-            if queryword == econ:
-                print('Economy')
-                sheet['C' + str(sheet_len+1)] = 'Economy'
-        for warr in war:
-            if queryword == warr:
-                print('War')
-                sheet['C' + str(sheet_len+1)] = 'War'
-        for pols in politics:
-            if queryword == pols:
-                print('Politics')
-                sheet['C' + str(sheet_len+1)] = 'Politics'
-        for sportt in sport:
-            if queryword == sportt:
-                print('Sport')
-                sheet['C' + str(sheet_len+1)] = 'Sport'
-        for ent in entertainment:
-            if queryword == ent:
-                print('Entertainment')
-                sheet['C' + str(sheet_len+1)] = 'Entertainment'
     
-                
-
-
-    sheet['B' + str(sheet_len+1)] = urls[0]
-    wb.save('interests.xlsx')
-
-
-def load_news():
-    html_text = requests.get(ws['B2'].value).text
-    soup = BeautifulSoup(html_text, 'lxml')
-    head = soup.find('title')
-    content = soup.find_all('p')
-    print(head.text)
-    y = 0
-    while y < len(content):
-        print(content[y].text)
-        y+=1
-
+    
+    query2 = query.split()
+    for x in query2:
+        if x in science:
+            print('Science')
+        elif x in business:
+            print('Business')
+        elif x in tech:
+            print('Tech')
+        elif x in health:
+            print('Health')
+        elif x in economy:
+            print('Economy')
+        elif x in war:
+            print('War')
+        elif x in politics:
+            print('Politics')
+        elif x in sport:
+            print('Sport')
+        elif x in entertainment:
+            print('Ent')
+        else:
+            print('N/A')
+    new = query
+    new_tokens = nltk.pos_tag(word_tokenize(new))
+    
+    grammer_np = r'NP: {<DT>?<JJ>*<NN>}'
+    chunk_parser = nltk.RegexpParser(grammer_np)
+    chunk_result = chunk_parser.parse(new_tokens)
+    print(new_tokens)
+    for new in new_tokens:
+        if new[1] == 'NNS' or new[1] == 'NN':
+            print(new[0])
+            print(new[1])
+    print(chunk_parser)
+    print(chunk_result)
 
 fetchnews()
 
+# The machine following a set of instructions is one thing, making it learn from the available data is something diff.
